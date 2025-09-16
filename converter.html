@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Distance Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .converter-card, .info-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #2a5298;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        .conversion-toggle {
+            display: flex;
+            background: #f5f6fa;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 25px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .toggle-option.active {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+            box-shadow: 0 2px 8px rgba(42, 82, 152, 0.3);
+        }
+
+        .convert-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+            background: linear-gradient(135deg, #e6c547 0%, #d4af37 100%);
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #f8f9ff, #e8f4fd);
+            border: 2px solid #e1e8ff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .result-details {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .calculation-steps {
+            background: #fff9e6;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .calculation-steps h3 {
+            color: #b8860b;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .step {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .info-card h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e1e8ff;
+            padding-bottom: 10px;
+        }
+
+        .conversion-facts {
+            margin-bottom: 25px;
+        }
+
+        .fact-item {
+            background: #f8f9ff;
+            border-left: 4px solid #2a5298;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .fact-label {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.9rem;
+        }
+
+        .fact-value {
+            color: #555;
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .quick-conversions {
+            margin-bottom: 25px;
+        }
+
+        .conversion-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversion-table th {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .conversion-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+        }
+
+        .conversion-table tr:nth-child(even) td {
+            background: #f8f9ff;
+        }
+
+        .conversion-table tr:hover td {
+            background: #e8f4fd;
+            cursor: pointer;
+        }
+
+        .real-world-examples {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .real-world-examples h3 {
+            color: #0369a1;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .example-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
+            border-left: 3px solid #0ea5e9;
+            font-size: 0.85rem;
+        }
+
+        .precision-control {
+            margin-bottom: 20px;
+        }
+
+        .precision-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .precision-display {
+            text-align: center;
+            font-weight: 600;
+            color: #2a5298;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .converter-card, .info-card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .formula-display {
+            background: #1a1a2e;
+            color: #eee;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Converter Section -->
+        <div class="converter-card">
+            <h1>🎯 Distance Converter</h1>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="distance-input">Enter Distance Value:</label>
+                    <input type="number" id="distance-input" placeholder="e.g., 100" step="any" min="0">
+                </div>
+
+                <div class="conversion-toggle">
+                    <div class="toggle-option active" id="km-to-mi" onclick="selectConversion('km-to-mi')">
+                        Kilometers → Miles
+                    </div>
+                    <div class="toggle-option" id="mi-to-km" onclick="selectConversion('mi-to-km')">
+                        Miles → Kilometers
+                    </div>
+                </div>
+
+                <div class="precision-control">
+                    <label>Decimal Precision: <span class="precision-display" id="precision-display">4 places</span></label>
+                    <input type="range" class="precision-slider" id="precision-slider" min="0" max="8" value="4">
+                </div>
+            </div>
+
+            <button class="convert-btn" onclick="convert()">Calculate Conversion</button>
+
+            <div class="result-container">
+                <div class="result" id="result">Enter a value to see the conversion</div>
+                <div class="result-details" id="result-details">Results will appear here with detailed calculations</div>
+            </div>
+
+            <div class="calculation-steps" id="calculation-steps" style="display: none;">
+                <h3>📐 Calculation Process:</h3>
+                <div id="steps-content"></div>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="info-card">
+            <h2>📚 Conversion Reference</h2>
+            
+            <div class="conversion-facts">
+                <div class="fact-item">
+                    <div class="fact-label">Exact Conversion Factor:</div>
+                    <div class="fact-value">1 kilometer = 0.621371192 miles</div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-label">Inverse Factor:</div>
+                    <div class="fact-value">1 mile = 1.609344 kilometers</div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-label">Origin:</div>
+                    <div class="fact-value">Based on international yard and pound agreement (1959)</div>
+                </div>
+            </div>
+
+            <div class="formula-display">
+                <strong>Mathematical Formula:</strong><br>
+                • km to miles: <span class="highlight">miles = km × 0.621371192</span><br>
+                • miles to km: <span class="highlight">km = miles × 1.609344</span>
+            </div>
+
+            <div class="quick-conversions">
+                <h3>⚡ Quick Reference Table:</h3>
+                <table class="conversion-table">
+                    <thead>
+                        <tr>
+                            <th>Kilometers</th>
+                            <th>Miles</th>
+                            <th>Context</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reference-table">
+                        <tr onclick="useValue(1, 'km')"><td>1</td><td>0.62</td><td>Short walk</td></tr>
+                        <tr onclick="useValue(5, 'km')"><td>5</td><td>3.11</td><td>Typical run</td></tr>
+                        <tr onclick="useValue(10, 'km')"><td>10</td><td>6.21</td><td>City commute</td></tr>
+                        <tr onclick="useValue(42.195, 'km')"><td>42.2</td><td>26.2</td><td>Marathon</td></tr>
+                        <tr onclick="useValue(100, 'km')"><td>100</td><td>62.1</td><td>Highway drive</td></tr>
+                        <tr onclick="useValue(1000, 'km')"><td>1000</td><td>621</td><td>Cross-country</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="real-world-examples">
+                <h3>🌍 Real-World Applications:</h3>
+                <div class="example-item">
+                    <strong>Sports:</strong> Track events use meters/km, road races often use miles
+                </div>
+                <div class="example-item">
+                    <strong>Aviation:</strong> Flight distances typically measured in nautical miles
+                </div>
+                <div class="example-item">
+                    <strong>GPS/Navigation:</strong> Settings can display either unit system
+                </div>
+                <div class="example-item">
+                    <strong>International Travel:</strong> Most countries use km, US/UK use miles
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentConversion = 'km-to-mi';
+        let precision = 4;
+
+        // Exact conversion factors
+        const KM_TO_MILES = 0.621371192;
+        const MILES_TO_KM = 1.609344;
+
+        function selectConversion(type) {
+            currentConversion = type;
+            
+            // Update UI
+            document.querySelectorAll('.toggle-option').forEach(el => el.classList.remove('active'));
+            document.getElementById(type).classList.add('active');
+            
+            // Auto-convert if value exists
+            const input = document.getElementById('distance-input');
+            if (input.value && !isNaN(parseFloat(input.value))) {
+                convert();
+            }
+        }
+
+        function updatePrecision() {
+            precision = parseInt(document.getElementById('precision-slider').value);
+            document.getElementById('precision-display').textContent = `${precision} places`;
+            
+            // Re-convert if there's a result
+            const input = document.getElementById('distance-input');
+            if (input.value && !isNaN(parseFloat(input.value))) {
+                convert();
+            }
+        }
+
+        function useValue(value, unit) {
+            document.getElementById('distance-input').value = value;
+            
+            // Set correct conversion direction
+            if (unit === 'km') {
+                selectConversion('km-to-mi');
+            } else {
+                selectConversion('mi-to-km');
+            }
+            
+            convert();
+        }
+
+        function convert() {
+            const input = document.getElementById('distance-input');
+            const result = document.getElementById('result');
+            const resultDetails = document.getElementById('result-details');
+            const calculationSteps = document.getElementById('calculation-steps');
+            const stepsContent = document.getElementById('steps-content');
+            
+            const inputValue = parseFloat(input.value);
+            
+            // Input validation
+            if (isNaN(inputValue) || input.value.trim() === '') {
+                result.textContent = 'Please enter a valid number';
+                resultDetails.textContent = 'Enter a positive number to see conversion results';
+                calculationSteps.style.display = 'none';
+                return;
+            }
+            
+            if (inputValue < 0) {
+                result.textContent = 'Distance must be positive';
+                resultDetails.textContent = 'Please enter a value greater than or equal to 0';
+                calculationSteps.style.display = 'none';
+                return;
+            }
+            
+            let convertedValue, factor, fromUnit, toUnit, formula;
+            
+            if (currentConversion === 'km-to-mi') {
+                convertedValue = inputValue * KM_TO_MILES;
+                factor = KM_TO_MILES;
+                fromUnit = 'kilometers';
+                toUnit = 'miles';
+                formula = `${inputValue} × ${KM_TO_MILES} = ${convertedValue}`;
+            } else {
+                convertedValue = inputValue * MILES_TO_KM;
+                factor = MILES_TO_KM;
+                fromUnit = 'miles';
+                toUnit = 'kilometers';
+                formula = `${inputValue} × ${MILES_TO_KM} = ${convertedValue}`;
+            }
+            
+            // Format results
+            const formattedResult = convertedValue.toFixed(precision);
+            const exactResult = convertedValue.toString();
+            
+            // Display results
+            result.textContent = `${inputValue} ${fromUnit} = ${formattedResult} ${toUnit}`;
+            
+            // Additional details
+            let speedContext = '';
+            if (inputValue >= 50 && fromUnit === 'miles') {
+                speedContext = ' (typical highway distance)';
+            } else if (inputValue >= 10 && fromUnit === 'kilometers') {
+                speedContext = ' (good cycling distance)';
+            } else if (inputValue <= 5 && inputValue > 0) {
+                speedContext = ' (walkable distance)';
+            }
+            
+            resultDetails.innerHTML = `
+                <strong>Exact value:</strong> ${exactResult} ${toUnit}<br>
+                <strong>Rounded to ${precision} decimal places:</strong> ${formattedResult} ${toUnit}${speedContext}<br>
+                <strong>Conversion factor:</strong> ${factor}
+            `;
+            
+            // Show calculation steps
+            calculationSteps.style.display = 'block';
+            stepsContent.innerHTML = `
+                <div class="step">Step 1: Identify conversion factor = ${factor}</div>
+                <div class="step">Step 2: Apply formula = ${inputValue} × ${factor}</div>
+                <div class="step">Step 3: Calculate result = ${exactResult}</div>
+                <div class="step">Step 4: Round to ${precision} places = ${formattedResult}</div>
+            `;
+        }
+
+        // Event listeners
+        document.getElementById('precision-slider').addEventListener('input', updatePrecision);
+
+        document.getElementById('distance-input').addEventListener('input', function() {
+            if (this.value && !isNaN(parseFloat(this.value))) {
+                // Auto-convert after short delay
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(convert, 500);
+            }
+        });
+
+        document.getElementById('distance-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convert();
+            }
+        });
+
+        // Initialize
+        updatePrecision();
+    </script>
+</body>
+</html>
